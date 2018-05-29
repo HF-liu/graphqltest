@@ -1,5 +1,6 @@
 const graphql = require('graphql')
-const _ = require('lodash')
+const axios = require('axios')
+
 const {
   GraphQLObjectType,
   GraphQLString,
@@ -7,10 +8,10 @@ const {
   GraphQLSchema
 } = graphql
 
-const users = [
-  { id: '23', firstName: 'David', age: 30 },
-  { id: '47', firstName: 'Clare', age: 32 }
-]
+// const users = [
+//   { id: '23', firstName: 'David', age: 30 },
+//   { id: '47', firstName: 'Clare', age: 32 }
+// ]
 
 const UserType = new GraphQLObjectType({
   name: 'User',
@@ -28,7 +29,9 @@ const RootQuery = new GraphQLObjectType({
       type: UserType,
       args: { id: { type: GraphQLString } },
       resolve(parentValue, args) {
-        return _.find(users, { id: args.id })
+        // return _.find(users, { id: args.id })
+        return axios.get(`http://localhost:3000/users/${args.id}`)
+        .then(response => response.data)
       }
     }
   }
